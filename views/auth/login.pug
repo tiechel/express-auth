@@ -1,0 +1,73 @@
+extends ../layout
+
+block style
+  style.
+    .login-container {
+      margin-top: 15px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      padding: 15px;
+    }
+
+block navbar-content
+
+block content
+  .container
+    .row
+      .col-md-4.offset-md-4
+        .login-container
+          form#loginForm.needs-validation(action="" method="POST" novalidate)
+            .mb-3
+              label.form-label ユーザー名
+              input.form-control(type="text" name="username" placeholder="username" required)
+            .mb-3
+              label.form-label パスワード
+              input.form-control(type="password" name="password" placeholder="password" required)
+            button.btn.btn-primary(type="submit") ログイン
+
+block script
+  script.
+    (function() {
+      //- elem.validity objectについて
+      // validity.valid ;	// 入力内容に問題がない場合はtrue
+      // **IE Not Support** validity.badInput ;	// 何らかの入力不具合がある場合はtrue
+      // validity.customError ;	// カスタム検証エラーの場合はtrue
+      // validity.patternMismatch ;	// pattern属性に違反している場合はtrue
+      // validity.rangeOverflow ;	// max属性に違反している場合はtrue
+      // validity.rangeUnderflow ;	// min属性に違反している場合はtrue
+      // validity.stepMismatch ;	// step属性に違反している場合はtrue
+      // validity.tooLong ;	// maxlength属性に違反している場合はtrue
+      // **IE Not Support** validity.tooShort ;	// minlength属性に違反している場合はtrue
+      // validity.typeMismatch ;	// type属性に違反している場合はtrue
+      // validity.valueMissing ;	// required属性に違反している場合はtrue
+      // elem.setCustomValidity("custom error.");
+      const loginForm = document.querySelector('#loginForm');
+
+      // ログインフォーム
+      loginForm.addEventListener("submit", function(event) {
+        // 定型
+        Array.prototype.slice
+          .call(this.querySelectorAll('.valid-feedback, .invalid-feedback'))
+          .forEach(function (elem) { elem.parentNode.removeChild(elem); });
+
+        // メッセージの設定
+        const invalidFeedback = document.createElement('div');
+        invalidFeedback.className = 'invalid-feedback';
+
+        if (this.username.validity.valueMissing) {
+          invalidFeedback.innerHTML = 'ユーザー名が入力されていません。';
+          this.username.after(invalidFeedback.cloneNode(true));
+        }
+        if (this.password.validity.valueMissing) {
+          invalidFeedback.innerHTML = 'パスワードが入力されていません。';
+          this.password.after(invalidFeedback.cloneNode(true));
+        }
+
+        // 定型
+        if (!this.checkValidity()) {
+          event.stopPropagation();
+          event.preventDefault();
+          this.classList.add('was-validated');
+        }
+      }, true)
+    })();
