@@ -3,18 +3,11 @@ const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
+const flash = require('connect-flash');
+const session = require('express-session');
 const logger = require('morgan');
-
-const routers = [
-  {
-    path: '/',
-    handlers: [require('./src/routes/index')],
-  },
-  {
-    path: '/auth',
-    handlers: [require('./src/routes/auth')],
-  },
-];
+const passportSetting = require('./src/middleware/passport');
+const config = require('./config');
 
 const app = express();
 console.log(`app.env=${app.get('env')}`);
@@ -28,9 +21,38 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(session({ secret: 'poepoepoepoepoe', resave: true, saveUninitialized: true }));
+app.use(flash());
+app.use((req, res, next) => {
+  res.locals.flash = req.flash();
+  next();
+});
+// passport
+const passport = passportSetting(app);
+
+const login = passport.authenticate('local-login', {
+  successRedirect: config.LOGIN_REDIRECT_URL,
+  failureRedirect: config.LOGIN_URL,
+  failureFlash: true,
+});
+
+const routers = [
+  {
+    path: '/',
+    handlers: [require('./src/routes/index')],
+  },
+  {
+    path: '/account',
+    handlers: [require('./src/routes/account')],
+  },
+  {
+    path: '/account/login',
+    handlers: [login],
+  },
+];
 
 for (const router of routers) {
-  app.use(router.path, ...router.handlers);
+  app.use(router.path, router.handlers);
 }
 
 // catch 404 and forward to error handler

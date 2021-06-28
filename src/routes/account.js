@@ -3,18 +3,19 @@ const router = express.Router();
 const config = require('../../config');
 
 router.get('/login', function (req, res, next) {
-  res.render('auth/login', { title: 'ログイン' });
+  if (req.isAuthenticated()) {
+    return res.redirect('/');
+  }
+  res.render('account/login', { title: 'ログイン' });
 });
 
-router.post('/login', function (req, res, next) {
-  res.redirect(config.LOGIN_REDIRECT_URL);
-});
-
-router.get('/logout', function (req, res, next) {
+router.get('/logout', (req, res, next) => {
+  req.logout();
   res.redirect(config.LOGIN_URL);
 });
 
-router.post('/logout', function (req, res, next) {
+router.post('/logout', (req, res, next) => {
+  req.logout();
   res.redirect(config.LOGIN_URL);
 });
 

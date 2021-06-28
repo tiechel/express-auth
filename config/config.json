@@ -1,0 +1,24 @@
+{
+  "development": {
+    "username": "exauth",
+    "password": "password",
+    "database": "postgres",
+    "host": "localhost",
+    "port": "5432",
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "exauth",
+    "password": "password",
+    "database": "exauth",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "exauth_production_user",
+    "password": "password",
+    "database": "exauth_production",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  }
+}
