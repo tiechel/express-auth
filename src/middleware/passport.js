@@ -28,7 +28,7 @@ module.exports = (app) => {
         process.nextTick(() => {
           models.User.findOne({ where: { username: username } })
             .then((user) => {
-              if (!user || user.password != password) {
+              if (!user || !user.validPassword(password)) {
                 return done(null, false, { message: 'ユーザー名またはパスワードが間違っています。' });
               }
               return done(null, user);

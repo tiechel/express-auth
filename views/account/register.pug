@@ -1,0 +1,78 @@
+extends ../layout
+
+block style
+  style.
+    .register-container {
+      margin-top: 15px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      padding: 15px;
+    }
+
+block navbar-content
+
+block content
+  .container
+    .row
+      .col-md-4.offset-md-4
+        .register-container
+          h4 アカウント登録
+          form#registerForm(action="" method="POST" novalidate)
+            - if(flash.messages)
+              .alert.alert-danger
+                ul.list-unstyled.mb-0
+                  each m in flash.messages
+                    li #{m}
+            .mb-3
+              label.form-label ユーザー名
+              input.form-control(type="text" name="username" placeholder="ユーザー名" required)
+            .mb-3
+              label.form-label パスワード
+              input.form-control(type="password" name="password" placeholder="パスワード" required)
+            .mb-3
+              label.form-label 表示名
+              input.form-control(type="display_name" name="display_name" placeholder="表示名" required)
+            .d-grid.gap-2
+              button.btn.btn-primary(type="submit") 登録
+              a.btn.btn-link(href="/account/login") ログイン画面へ
+
+block script
+  script.
+    (function() {
+      const registerForm = document.querySelector('#registerForm');
+
+      // 登録フォーム
+      registerForm.addEventListener("submit", function(event) {
+        // 定型
+        Array.prototype.slice
+          .call(this.querySelectorAll('.valid-feedback, .invalid-feedback'))
+          .forEach(function (elem) { elem.parentNode.removeChild(elem); });
+
+        // メッセージの設定
+        const invalidFeedback = document.createElement('div');
+        invalidFeedback.className = 'invalid-feedback';
+
+        if (this.username.validity.valueMissing) {
+          invalidFeedback.innerHTML = 'ユーザー名が入力されていません。';
+          this.username.after(invalidFeedback.cloneNode(true));
+        }
+        if (this.password.validity.valueMissing) {
+          invalidFeedback.innerHTML = 'パスワードが入力されていません。';
+          this.password.after(invalidFeedback.cloneNode(true));
+        if (this.password.validity.valueMissing) {
+          invalidFeedback.innerHTML = 'パスワードが入力されていません。';
+          this.password.after(invalidFeedback.cloneNode(true));
+        }
+        if (this.display_name.validity.valueMissing) {
+          invalidFeedback.innerHTML = 'パスワードが入力されていません。';
+          this.display_name.after(invalidFeedback.cloneNode(true));
+        }
+
+        // 定型
+        if (!this.checkValidity()) {
+          event.stopPropagation();
+          event.preventDefault();
+          this.classList.add('was-validated');
+        }
+      }, true)
+    })();

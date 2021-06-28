@@ -16,19 +16,22 @@ block content
     .row
       .col-md-4.offset-md-4
         .login-container
-          form#loginForm.needs-validation(action="" method="POST" novalidate)
+          h4 アカウント登録
+          form#loginForm(action="" method="POST" novalidate)
+            - if(flash.error)
+              .alert.alert-danger
+                ul.list-unstyled.mb-0
+                  each m in flash.error
+                    li #{m}
             .mb-3
-              - if(flash.error)
-                .alert.alert-danger
-                  ul.list-unstyled.mb-0
-                    each m in flash.error
-                      li #{m}
               label.form-label ユーザー名
               input.form-control(type="text" name="username" placeholder="username" required)
             .mb-3
               label.form-label パスワード
               input.form-control(type="password" name="password" placeholder="password" required)
-            button.btn.btn-primary(type="submit") ログイン
+            .d-grid.gap-2
+              button.btn.btn-primary(type="submit") ログイン
+              a.btn.btn-secondary(href="/account/register") 新規作成
 
 block script
   script.
